@@ -1,0 +1,606 @@
+
+
+<!-- ///////////////////////////////////////////////////////////////////////////////////////                                 include('../layouts/navbar-2.ejs') %>           -->
+
+
+<%- include('../layouts/header.ejs') %>
+
+<main class="main">
+    <div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
+        <div class="container">
+            <h1 class="page-title">Checkout<span>Shop</span></h1>
+        </div>
+    </div>
+    <nav aria-label="breadcrumb" class="breadcrumb-nav">
+        <div class="container">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/userhome">Home</a></li>
+                <li class="breadcrumb-item"><a href="#">Shop</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+            </ol>
+        </div>
+    </nav>
+
+    <div class="page-content">
+        <div class="checkout">
+            <div class="container">
+                <div class="row">
+                    
+                    <div class="col-lg-9 billing-address">
+                        <div class="card-body">
+                            <h3 class="card-title">Billing Address</h3>
+                            
+                            <% address.forEach((data,i) => { %>
+                                <input type="radio" name="shippingAddress"  value="<%= data._id %>" <% if (i === 0) { %> checked <% } %> >
+                                <p><strong><%= data.name %></strong></p>
+                                <p><%= data.streetAddress %> <br><%= data.city %>, <%= data.state %>, <%= data.postalCode %><br></p>
+                                <p>Phone: <%= data.mobile %></p>
+                                <div>
+                                    <button class="btn btn-primary btn-sm edit-address" data-bs-toggle="modal" data-bs-target="#editAddressModal" data-address-id="<%= data._id %>"><i class="fas fa-edit"></i> Edit</button>
+                                </div>
+                            <% }) %> 
+                        </div>
+
+                        
+                        <button id="openModalBtn">ADD ADDRESS</button>
+                    </div>
+    
+                    <div class="col-lg-3">
+                        <aside class="summary">
+                            <h3 class="summary-title">Your Order</h3>
+    
+                            <table class="table table-summary">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% cart.forEach(function(cartItem) { %>
+                                        <tr>
+                                            <td><a href="#"><%= cartItem.productId.name %></a></td>
+                                            <td>₹<%= cartItem.productId.price * cartItem.quantity%></td>
+                                        </tr>
+                                    <% }); %>
+                                    <tr class="summary-subtotal">
+                                        <td>Subtotal:</td>
+                                        <td>₹<%= totalPrice.toFixed(2) %></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Shipping:</td>
+                                        <td>Free shipping</td>
+                                    </tr>
+                                    <tr class="summary-total">
+                                        <td>Total:</td>
+                                        <td>₹<%= totalPrice.toFixed(2) %></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            
+    
+                            <div class="accordion-summary" id="accordion-payment">
+                                <div class="card">
+                                    <div class="card-header" id="heading-1">
+                                        <h2 class="card-title">
+                                            <input type="radio" name="pay-method" value="bank_transfer" id="bank_transfer">
+                                            <label for="bank_transfer">Direct bank transfer</label>
+                                        </h2>
+                                    </div>
+                                    <div id="collapse-1" class="collapse show" aria-labelledby="heading-1" data-parent="#accordion-payment">
+                                        <div class="card-body">
+                                            Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card">
+                                    <div class="card-header" id="heading-2">
+                                        <h2 class="card-title">
+                                            <input type="radio" name="pay-method" value="check_payment" id="check_payment">
+                                            <label for="check_payment">Check payments</label>
+                                        </h2>
+                                    </div>
+                                    <div id="collapse-2" class="collapse" aria-labelledby="heading-2" data-parent="#accordion-payment">
+                                        <div class="card-body">
+                                            Ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Nullam malesuada erat ut turpis. 
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card">
+                                    <div class="card-header" id="heading-3">
+                                        <h2 class="card-title">
+                                            <input type="radio" name="pay-method" value="cash_on_delivery" id="cash_on_delivery">
+                                            <label for="cash_on_delivery">Cash on delivery</label>
+                                        </h2>
+                                    </div>
+                                    <div id="collapse-3" class="collapse" aria-labelledby="heading-3" data-parent="#accordion-payment">
+                                        <div class="card-body">Quisque volutpat mattis eros. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. 
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card">
+                                    <div class="card-header" id="heading-4">
+                                        <h2 class="card-title">
+                                            <input type="radio" name="pay-method" value="paypal" id="paypal">
+                                            <label for="paypal">PayPal</label>                                            
+                                        </h2>
+                                    </div>
+                                    <div id="collapse-4" class="collapse" aria-labelledby="heading-4" data-parent="#accordion-payment">
+                                        <div class="card-body">
+                                            Nullam malesuada erat ut turpis. Suspendisse urna nibh, viverra non, semper suscipit, posuere a, pede. Donec nec justo eget felis facilisis fermentum.
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="card">
+                                    <div class="card-header" id="heading-5">
+                                        <h2 class="card-title">
+                                            <input type="radio" name="pay-method" value="credit_card_stripe" id="credit_card_stripe">
+                                            <label for="credit_card_stripe">Credit Card (Stripe)</label>
+                                             <img src="assets/images/payments-summary.png" alt="payments cards">
+                                            
+                                        </h2>
+                                    </div>
+                                    <div id="collapse-5" class="collapse" aria-labelledby="heading-5" data-parent="#accordion-payment">
+                                        <div class="card-body"> Donec nec justo eget felis facilisis fermentum.Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Donec odio. Quisque volutpat mattis eros. Lorem ipsum dolor sit ame.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button id="proceedButton" type="button" class="btn btn-outline-primary-2 btn-order btn-block">
+                                <span class="btn-text">Place Order</span>
+                                <span class="btn-hover-text">Proceed to Checkout</span>
+                              </button>
+                              
+                        </div>
+                    </aside>                         
+                </div>
+            </div>
+        </div><!-- End .checkout -->
+    </div><!-- End .page-content -->
+</main>
+
+<%- include('../layouts/footer.ejs') %>
+
+   
+    <button id="scroll-top" title="Back to Top"><i class="icon-arrow-up"></i></button>
+
+    <!-- Mobile Menu -->
+    
+<%- include('../layouts/mobilemenu.ejs')  %>
+
+
+  <!--                   ////////////////////////////////////////                            -->
+
+
+<div class="modal" id="addressModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Manage Address</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Your address form here -->
+                <form action="/checkoutAddress" method="post" class="p-5 shadow rounded bg-white">
+                    <!-- Address form content -->
+                    <h2 class="mb-5 text-center">Manage Address</h2>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="name"
+                                name="name" placeholder="Enter your Name" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="mobile" class="form-label">Mobile Number</label>
+                            <input type="number" class="form-control" id="mobile"
+                                name="mobile" placeholder="10-digit number" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="postalCode" class="form-label">Postal Code</label>
+                            <input type="number" class="form-control" id="postalCode"
+                                name="postalCode" placeholder="Postal Code" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="locality" class="form-label">Locality</label>
+                            <input type="text" class="form-control" id="locality"
+                                name="locality" placeholder="Locality" required>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="streetAddress" class="form-label">Address
+                                    (Area and Street)</label>
+                                <textarea class="form-control" id="streetAddress"
+                                    name="streetAddress" placeholder="" rows="3"
+                                    required></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="city" class="form-label">City/District/Town</label>
+                            <input type="text" class="form-control" id="city"
+                                name="city" placeholder="" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="state" class="form-label">State</label>
+                            <select class="form-select" name="state" id="state" required>
+                                <option selected> Select State </option>
+                                <!-- Add your state options here -->
+                                <option value="AP">Andhra Pradesh</option>
+                                <option value="AR">Arunachal Pradesh</option>
+                                <option value="AS">Assam</option>
+                                <option value="BR">Bihar</option>
+                                <option value="CT">Chhattisgarh</option>
+                                <option value="GA">Goa</option>
+                                <option value="GJ">Gujarat</option>
+                                <option value="HR">Haryana</option>
+                                <option value="HP">Himachal Pradesh</option>
+                                <option value="JK">Jammu and Kashmir</option>
+                                <option value="JH">Jharkhand</option>
+                                <option value="KA">Karnataka</option>
+                                <option value="Kerala">Kerala</option>
+                                <option value="MP">Madhya Pradesh</option>
+                                <option value="MH">Maharashtra</option>
+                                <option value="MN">Manipur</option>
+                                <option value="ML">Meghalaya</option>
+                                <option value="MZ">Mizoram</option>
+                                <option value="NL">Nagaland</option>
+                                <option value="OD">Odisha</option>
+                                <option value="PB">Punjab</option>
+                                <option value="RJ">Rajasthan</option>
+                                <option value="SK">Sikkim</option>
+                                <option value="TN">Tamil Nadu</option>
+                                <option value="TG">Telangana</option>
+                                <option value="TR">Tripura</option>
+                                <option value="UP">Uttar Pradesh</option>
+                                <option value="UT">Uttarakhand</option>
+                                <option value="WB">West Bengal</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="landmark" class="form-label">Landmark</label>
+                            <input type="text" class="form-control" id="landmark"
+                                name="landmark" placeholder="optional">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="alterPhone" class="form-label">Alternate
+                                Phone</label>
+                            <input type="text" class="form-control" id="alterPhone"
+                                name="alterPhone" placeholder="optional">
+                        </div>
+                        <div class="col-4">
+                            <label for="addressType" class="form-label">Address Type</label>
+                            <select class="form-select" id="addressType"
+                                name="addressType" required>
+                                <option selected> Select </option>
+                                <option value="home">Home</option>
+                                <option value="work">Work</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center mt-5">
+                        <button type="submit" class="btn btn-primary px-4">Save</button>
+                        <a href="/checkout"
+                            class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editAddressModal" tabindex="-1" aria-labelledby="editAddressModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h5 class="modal-title" id="editAddressModalLabel">Edit Address</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+            <!-- Address edit form content -->
+                <form action="/editCheckout" method="post" class="p-5 shadow rounded bg-white" id="editAddressForm">
+                    <!-- Address form content -->
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="name"
+                                name="name" placeholder="Enter your Name" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="mobile" class="form-label">Mobile Number</label>
+                            <input type="number" class="form-control" id="mobile"
+                                name="mobile" placeholder="10-digit number" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="postalCode" class="form-label">Postal Code</label>
+                            <input type="number" class="form-control" id="postalCode"
+                                name="postalCode" placeholder="Postal Code" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="locality" class="form-label">Locality</label>
+                            <input type="text" class="form-control" id="locality"
+                                name="locality" placeholder="Locality" required>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="mb-3">
+                                <label for="streetAddress" class="form-label">Address
+                                    (Area and Street)</label>
+                                <textarea class="form-control" id="streetAddress"
+                                    name="streetAddress" placeholder="" rows="3"
+                                    required></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="city" class="form-label">City/District/Town</label>
+                            <input type="text" class="form-control" id="city"
+                                name="city" placeholder="" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="state" class="form-label">State</label>
+                            <select class="form-select" name="state" id="state" required>
+                                <option selected> Select State </option>
+                                <!-- Add your state options here -->
+                                <option value="AP">Andhra Pradesh</option>
+                                <option value="AR">Arunachal Pradesh</option>
+                                <option value="AS">Assam</option>
+                                <option value="BR">Bihar</option>
+                                <option value="CT">Chhattisgarh</option>
+                                <option value="GA">Goa</option>
+                                <option value="GJ">Gujarat</option>
+                                <option value="HR">Haryana</option>
+                                <option value="HP">Himachal Pradesh</option>
+                                <option value="JK">Jammu and Kashmir</option>
+                                <option value="JH">Jharkhand</option>
+                                <option value="KA">Karnataka</option>
+                                <option value="Kerala">Kerala</option>
+                                <option value="MP">Madhya Pradesh</option>
+                                <option value="MH">Maharashtra</option>
+                                <option value="MN">Manipur</option>
+                                <option value="ML">Meghalaya</option>
+                                <option value="MZ">Mizoram</option>
+                                <option value="NL">Nagaland</option>
+                                <option value="OD">Odisha</option>
+                                <option value="PB">Punjab</option>
+                                <option value="RJ">Rajasthan</option>
+                                <option value="SK">Sikkim</option>
+                                <option value="TN">Tamil Nadu</option>
+                                <option value="TG">Telangana</option>
+                                <option value="TR">Tripura</option>
+                                <option value="UP">Uttar Pradesh</option>
+                                <option value="UT">Uttarakhand</option>
+                                <option value="WB">West Bengal</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="landmark" class="form-label">Landmark</label>
+                            <input type="text" class="form-control" id="landmark"
+                                name="landmark" placeholder="optional">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="alterPhone" class="form-label">Alternate
+                                Phone</label>
+                            <input type="text" class="form-control" id="alterPhone"
+                                name="alterPhone" placeholder="optional">
+                        </div>
+                        <div class="col-4">
+                            <label for="addressType" class="form-label">Address Type</label>
+                            <select class="form-select" id="addressType"
+                                name="addressType" required>
+                                <option selected> Select </option>
+                                <option value="home">Home</option>
+                                <option value="work">Work</option>
+                            </select>
+                        </div>
+                    </div>
+                    <input type="hidden" id="addressId" name="addressId" value="">
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="saveChangesBtn">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+    <!-- Sign in / Register Modal -->
+    
+
+ <%- include('../layouts/signinmodal.ejs') %>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+    const openModalBtn = document.getElementById("openModalBtn");
+    const addressModal = document.getElementById("addressModal");
+    const modal = new bootstrap.Modal(addressModal);
+    
+    openModalBtn.addEventListener("click", function() {
+        modal.show(); 
+    });
+    });
+
+
+    document.addEventListener('DOMContentLoaded', function () {
+    const editButtons = document.querySelectorAll('.edit-address');
+
+    editButtons.forEach(button => {
+        button.addEventListener('click', async function () {
+            try {
+                const addressId = this.getAttribute('data-address-id');
+                const modal = document.querySelector('#editAddressModal');
+
+                const response = await fetch(`/getAddressDetails?id=${addressId}`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch address details');
+                }
+                const address = await response.json();
+
+                
+                modal.querySelector('#name').value = address.name;
+                modal.querySelector('#mobile').value = address.mobile;
+                modal.querySelector('#postalCode').value = address.postalCode;
+                modal.querySelector('#locality').value = address.locality;
+                modal.querySelector('#streetAddress').value = address.streetAddress;
+                modal.querySelector('#city').value = address.city;
+                modal.querySelector('#state').value = address.state;
+                modal.querySelector('#landmark').value = address.landmark;
+                modal.querySelector('#alterPhone').value = address.alterPhone;
+                modal.querySelector('#addressType').value = address.addressType;
+
+                
+                modal.querySelector('#addressId').value = address._id;
+
+                $(modal).modal('show');
+            } catch (error) {
+                console.error('Error fetching address details:', error);
+            }
+        });
+    });
+
+
+
+    //  for save changes button
+
+    const saveChangesBtn = document.getElementById('saveChangesBtn');
+    saveChangesBtn.addEventListener('click', async function () {
+        try {
+            const modal = document.querySelector('#editAddressModal');
+            
+           
+            const formData = new FormData(modal.querySelector('#editAddressForm'));
+
+            
+            const jsonObject = {};
+            formData.forEach(function(value, key){
+                jsonObject[key] = value;
+            });
+            const jsonFormData = JSON.stringify(jsonObject);
+
+            const response = await fetch('/editCheckout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: jsonFormData
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to save changes');
+            }
+
+            
+            $(modal).modal('hide');
+        } catch (error) {
+            console.error('Error saving changes:', error);
+        }
+    });
+});
+
+    </script>
+
+<script>
+
+// document.addEventListener('DOMContentLoaded', function() {
+//     const proceedButton = document.getElementById('proceedButton');
+    
+//     proceedButton.addEventListener('click', function(event) {
+//         const paymentMethod = document.querySelector('input[name="pay-method"]:checked');
+
+//         if (paymentMethod && paymentMethod.value === 'cash_on_delivery') {
+//             window.location.href = '/thankyou'; 
+//         } else {
+//             alert('Please select Cash on Delivery as the payment method.');
+//             event.preventDefault(); 
+//         }
+//     });
+// });
+
+
+const placeorder = document.getElementById('proceedButton');
+placeorder.addEventListener('click', async function (e) {
+    e.preventDefault();
+    console.log('proceed clicked ');
+
+    // Get the selected payment option
+    const paymentOption = document.querySelector('input[name="pay-method"]:checked');
+    console.log('paymentOption', paymentOption)
+    if (!paymentOption) {
+        // Use SweetAlert to show the message
+        swal("Please select a payment option", "", "warning");
+        return; 
+    }
+
+    if (paymentOption.value === 'cash_on_delivery') {
+        var selectedAddress = document.querySelector('input[name="shippingAddress"]:checked');
+        if (selectedAddress) {
+            // Get the delivery address
+            const deliveryAddress = selectedAddress.value; // Assuming the value attribute holds the delivery address
+console.log('deliveryAddress',deliveryAddress);
+            // Get the payment method
+            const paymentMethod = paymentOption.value;
+
+            // Prepare the request body with only selected address and payment method
+            const requestBody = {
+                deliveryAddress: deliveryAddress,
+                paymentMethod: paymentMethod
+            };
+
+            // Make POST request to placeOrder endpoint with required fields in the request body
+            const response = await fetch('/placeOrder', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestBody)
+            });
+
+            // Handle response based on success or failure
+            if (response.ok) {
+                // Redirect to the thank you page
+                window.location.href = '/thankyou';
+            } else {
+                // Handle error response
+                console.error('Error placing order:', response.statusText);
+                // Display error message to the user
+                if (errormsg) {
+                    errormsg.innerHTML = 'Error placing order. Please try again later.';
+                }
+            }
+        } else {
+            if (errormsg) {
+                errormsg.innerHTML = 'Please select a shipping address';
+            }
+            return; 
+        }
+    } 
+});
+
+
+
+
+
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+    <!-- Plugins JS File -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/jquery.hoverIntent.min.js"></script>
+    <script src="assets/js/jquery.waypoints.min.js"></script>
+    <script src="assets/js/superfish.min.js"></script>
+    <script src="assets/js/owl.carousel.min.js"></script>
+    <!-- Main JS File -->
+    <script src="assets/js/main.js"></script>
+    <script src="path/to/your/javascript-file.js"></script>
+</body>
+
+
+<!-- molla/checkout.html  22 Nov 2019 09:55:06 GMT -->
+</html>

@@ -1,0 +1,154 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add Product Form</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.css" rel="stylesheet">
+<style>
+    /* Style for better presentation, you can customize */
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f4f4f4;
+    }
+    .container {
+        max-width: 500px;
+        width: 100%;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h2 {
+        margin-top: 0;
+        text-align: center;
+    }
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+    }
+    input[type="text"], input[type="number"], input[type="file"] {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        box-sizing: border-box;
+    }
+    button {
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        cursor: pointer;
+        margin-right: 10px;
+    }
+    button:hover {
+        background-color: #45a049;
+    }
+    /* Flexbox for image row */
+    .image-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+    .image-upload-container {
+        width: calc(33.33% - 10px); /* Adjust width to fit three images in a row with some margin */
+        text-align: center;
+    }
+</style>
+</head>
+<body>
+    <div class="container">
+        <h2>Add Product</h2>
+        <form id="addProductForm" onsubmit="form(this)"  action="/admin/addProduct" method="post" enctype="multipart/form-data">
+            <label for="productName">Product Name:</label>
+            <input type="text" oninput="hello(this)" id="productName" name="productName" required>
+
+            <label for="productCategory">Category:</label>
+            <select name="productCategory" id="productCategory" oninput="hello(this)">
+                <% Data.forEach((category)=>{ %>
+                <option value="<%= category._id %>"><%= category.name%></option>
+                <% }) %>
+            </select>
+
+            <!-- <input type="text" id="productCategory" name="productCategory" required> -->
+            <!-- <input type="text" id="productCategory" name="productCategory" required> -->
+
+            <label for="productPrice">Price:</label>
+            <input type="number" id="productPrice" name="productPrice" oninput="hello(this)" required> 
+            <!-- Image row -->
+            <div class="image-row">
+                <div class="image-upload-container">
+                    <label for="productImage">Image 1:</label>
+                    <input type="file" id="productImage" onchange="hello(this)" name="image"  accept="image/*" multiple required>
+
+                </div>
+            </div>
+            
+
+            <label for="productDescription">Product Description:</label>
+            <input type="text" id="productDescription" oninput="hello(this)" name="productDescription" required>
+
+            <label for="productQuantity">Quantity:</label>
+            <input type="number" id="productQuantity" oninput="hello(this)" name="productQuantity" required>
+
+            <label for="productSize">Size:</label>
+            <input type="text" id="productSize" oninput="hello(this)" name="productSize" required>
+
+            <div style="text-align: center;">
+                <button type="submit" oninput="hello(this)"  id="addProductBtn">Add Product</button>
+                <button type="reset">Cancel</button>
+            </div>
+        </form>
+    </div>
+    
+    <!-- Crop Modal -->
+    <!-- <div class="modal fade" id="cropModal" tabindex="-1" aria-labelledby="cropModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cropModalLabel">Crop Image</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img id="cropperImage" src="#" alt="Image to crop"> -->
+                    <!-- <input type="file" id="uploadImage"> -->
+                <!-- </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="cropImageBtn">Crop Image</button>
+                </div>
+            </div>
+        </div>
+    </div> -->
+    <script>
+        function hello(e){
+            const btn=document.querySelector('button[type="submit"]')
+            console.log(btn);
+            if(e.value.trim()==''){
+                btn.disabled=true;
+            }else{
+                btn.disabled=false;
+
+            }
+        
+        }
+    </script>
+    <script defer src="https://cdn.crop.guide/loader/l.js?c=DJNDTB"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Link Cropper.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.11/cropper.min.js"></script>
+
+</body>
+</html>
+

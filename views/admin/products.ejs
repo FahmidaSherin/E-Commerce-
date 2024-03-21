@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Regal Admin</title>
+    <!-- base:css -->
+    <link rel="stylesheet" href="/admin/vendors/mdi/css/materialdesignicons.min.css">
+    <link rel="stylesheet" href="/admin/vendors/feather/feather.css">
+    <link rel="stylesheet" href="/admin/vendors/base/vendor.bundle.base.css">
+    <!-- endinject -->
+    <!-- inject:css -->
+    <link rel="stylesheet" href="/admin/css/style.css">
+    <!-- endinject -->
+    <link rel="shortcut icon" href="images/favicon.png" />
+  </head>
+
+  <body>
+<style>
+   .listed {
+      background-color: red;
+      color: white;
+  }
+  
+  .unlisted {
+      background-color: green;
+      color: white;
+  }
+</style>
+ 
+    <div class="container-scroller">
+      <!-- partial:../../partials/_navbar.html -->
+      <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+        <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+          <a class="navbar-brand brand-logo" href="dashboard"><img src="../../images/logo.svg" alt="logo" /></a>
+          <a class="navbar-brand brand-logo-mini" href="dashboard"><img src="../../images/logo-mini.svg" alt="logo" /></a>
+        </div>
+        <div class="navbar-menu-wrapper d-flex align-items-center justify-content-end">
+          <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
+            <span class="icon-menu"></span>
+          </button>
+          <ul class="navbar-nav mr-lg-2">
+            <li class="nav-item nav-search d-none d-lg-block">
+              <div class="input-group">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="search">
+                    <i class="icon-search"></i>
+                  </span>
+                </div>
+                <input type="text" class="form-control" placeholder="Search Projects.." aria-label="search"
+                  aria-describedby="search">
+              </div>
+            </li>
+          </ul>
+          <ul class="navbar-nav navbar-nav-right">
+            <li class="nav-item dropdown d-lg-flex d-none">
+             <a href="/admin/addProduct"><button type="button" class="btn btn-info font-weight-bold">Add Products</button></a>
+            </li>
+            <li class="nav-item dropdown d-flex mr-4 ">
+              <div class="dropdown-menu dropdown-menu-right navbar-dropdown preview-list"
+                aria-labelledby="notificationDropdown">
+                <p class="mb-0 font-weight-normal float-left dropdown-header">Settings</p>
+                <a class="dropdown-item preview-item">
+                  <i class="icon-inbox"></i> Logout
+                </a>
+              </div>
+            </li>
+            <li class="nav-item dropdown mr-4 d-lg-flex d-none">
+              <a class="nav-link count-indicatord-flex align-item s-center justify-content-center" href="#">
+                <i class="icon-grid"></i>
+              </a>
+            </li>
+          </ul>
+          <button class="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button"
+            data-toggle="offcanvas">
+            <span class="icon-menu"></span>
+          </button>
+        </div>
+      </nav>
+      <!-- partial -->
+      <div class="container-fluid page-body-wrapper">
+
+        <!-- partial:../../partials/_sidebar.html -->
+        <nav class="sidebar sidebar-offcanvas" id="sidebar">
+          <div class="user-profile">
+            <div class="user-image">
+              <!-- <img src="../../images/faces/face28.png"> -->
+            </div>
+            <div class="user-name">
+              Edward Spencer
+            </div>
+            <div class="user-designation">
+              Developer
+            </div>
+          </div>
+          <ul class="nav">
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/dashboard">
+                <i class="icon-box menu-icon"></i>
+                <span class="menu-title">Dashboard</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/custommer">
+                <i class="icon-file menu-icon"></i>
+                <span class="menu-title">Custommer</span>
+              </a>
+            </li>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/products">
+                <i class="icon-command menu-icon"></i>
+                <span class="menu-title">Products</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/categories">
+                <i class="icon-help menu-icon"></i>
+                <span class="menu-title">Categories</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/orders">
+                <i class="icon-help menu-icon"></i>
+                <span class="menu-title">Coupons</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/orders">
+                <i class="icon-help menu-icon"></i>
+                <span class="menu-title">Offers</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/orders">
+                <i class="icon-help menu-icon"></i>
+                <span class="menu-title">Banners</span>
+              </a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/orders">
+                <i class="icon-help menu-icon"></i>
+                <span class="menu-title">Orders</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/logout">
+                <i class="icon-user menu-icon"></i>
+                <span class="menu-title">Logout</span>
+              </a>
+            </li>
+            <div class="collapse" id="auth">
+              <ul class="nav flex-column sub-menu">
+                <li class="nav-item"> <a class="nav-link" href="/aadmin/login"> Login </a></li>
+              </ul>
+            </div>
+            </li>
+          </ul>
+        </nav>
+
+        <div class="col-lg-12 grid-margin stretch-card">
+          <div class="card">
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-striped w-100 ">
+                  <thead>
+                    <tr>
+                      <th style="width:5%;" > ID </th>
+                      <th style="width:15%;"> PRODUCT NAME </th>
+                      <th style="width:6%;"> CATEGORY </th>
+                      <th style="width:7%;"> PRICE </th>
+                      <th style="width:4%;"> IMAGE </th>
+                      <th style="width:10%;"> DESCRIPTION </th>
+                      <th style="width:8%;"> QUANTITY </th>
+                      <th style="width:8%;"> SIZE </th>
+                      <th> ACTIONS </th>
+                      
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% if(locals.Products) { %>
+                      <% locals.Products.forEach ((Product,index) => {  %>
+                    <tr>
+                      <td>
+                        <%= index + 1  %>
+                      </td>
+                      <td>
+                        <%= Product.name %>
+                      </td>
+                      <td>
+                        <%= Product.category.name %>
+                    </td>
+                      <td>
+                        <%= Product.price %>
+                      </td>
+                      <td class="py-1">
+                        <img src="/upload/<%= Product.image[0] %>" alt="Product Image">
+                      </td>
+                      <td>
+                        <%= Product.description %>
+                       </td>
+                      <td>
+                       <%= Product.quantity %>
+                      </td>
+                      <td>
+                        <%= Product.size %>
+                       </td>
+                      <td>
+                        <div class="d-grid gap-2 d-md-flex">
+                          <a href="/admin/editProduct/<%= Product._id %>"> <button type="button" class="btn btn-outline-dark">Edit</button></a>
+
+                          <button id="toggleProduct<%= index %>"
+                            class="btn font-weight-bold <%= Product.status ? 'unlisted' : 'listed' %>"
+                            onclick="confirmToggleProductStatus('<%= Product._id %>', '<%= index %>', <%= Product.status %>)"
+                            type="button">
+                        <%= Product.status ? "Unlist" : "List" %>
+                    </button>
+
+                          <!-- <button class="btn" id="toggleProduct <%= index %>"  onclick="toggleProductStatus('<%= Product._id %>','<%= index %>')" type="button"
+                            class="btn font-weight-bold <%= Product.status ? 'unlisted' : 'listed' %>">
+                            <%= Product.status ? "Unlist" : "List" %>
+                        </button> -->
+                        
+
+                          <button onclick="deleteMe('<%= Product._id %>')" type="button"
+                            class="btn btn-danger font-weight-bold" id="delete-btn">DELETE</button>
+                          <!-- <button  onclick="deleteProduct('<%= Product._id %>')" type="button" class="btn btn-danger " disabled data-bs-toggle="button"
+                            autocomplete="off" id="delete-btn" >DELETE</button> --> 
+                          <!-- <button type="button" class="btn btn-success " disabled data-bs-toggle="button" autocomplete="off">List</button> -->
+                        </div>
+                      </td>
+                    </tr>
+                    <% }) %>
+                      <% } else { %> 
+                      <tr>
+                        <td colspan="4">
+                          <h2>NO Products found</h2>
+                        </td>
+                      </tr>
+                    <% } %>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <script>
+
+function confirmToggleProductStatus(productId, index , status) {
+    const button = document.getElementById(`toggleProduct${index}`);
+    const confirmationMessage = status ? "Are you sure you want to unlist this product?" : "Are you sure you want to list this product?";
+    console.log('Product ID:', productId);
+    console.log('Index:', index);
+    console.log('Status:', status);
+
+    if (confirm(confirmationMessage)) {
+        toggleProductStatus(productId, button);
+    }
+}
+
+function toggleProductStatus(productId, button) {
+  console.log('Product ID:',productId);
+    fetch(`/admin/products/${productId}/updateStatus?confirm=true`, {
+        method: 'post',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status) {
+            button.innerHTML = 'List';
+            button.classList.remove('unlist');
+            button.classList.add('list');
+        } else {
+            button.innerHTML = 'Unlist';
+            button.classList.remove('list');
+            button.classList.add('unlist');
+        }
+    })
+    .catch(error => {
+        console.error('Error toggling product status:', error.message);
+    });
+}
+
+    // async function toggleProductStatus(id, index) {
+    //     const button = document.getElementById(`toggle-btn-${index}`);
+    //     const confirmMessage = confirm(`Are you sure you want to ${button.classList.contains('listed') ? 'unlist' : 'list'} this product?`);
+        
+    //     if (confirmMessage) {
+    //         try {
+    //             const response = await fetch(`/admin/products/${id}`, {
+    //                 method: 'PATCH',
+    //                 headers: {
+    //                     'Content-Type': 'application/json'
+    //                 }
+    //             });
+                
+    //             if (response.ok) {
+    //                 button.classList.toggle('listed');
+    //                 button.classList.toggle('unlisted');
+    //                 // Reload the page or update the UI as needed
+    //                 window.location.reload();
+    //             } else {
+    //                 console.error('Failed to toggle product status');
+    //             }
+    //         } catch (error) {
+    //             console.error('Failed to toggle product status:', error);
+    //         }
+    //     }
+    // }
+
+
+
+      // async function toggleProductStatus(id , index) {
+      //     const action = document.getElementById("toggle-btn").innerText.toLowerCase();
+      //     const confirmMessage = action === "list" ? "Are you sure you want to list this product?" : "Are you sure you want to unlist this product?";
+          
+      //     if (confirm(confirmMessage)) {
+      //         try {
+      //             const response = await fetch(`/admin/products/${id}`, {
+      //                 method: 'PATCH', // or 'PUT'
+      //                 headers: {
+      //                     'Content-Type': 'application/json'
+      //                 },
+      //                 body: JSON.stringify({ status: !Product.status }) // Sending a flag to indicate the action (list/unlist)
+      //             });
+                  
+      //             if (response.ok) {
+      //                 window.location.reload(); // Reload the page to reflect the action
+      //             } else {
+      //                 console.error(`Failed to ${action} product`);
+      //             }
+      //         } catch (error) {
+      //             console.error(`Failed to ${action} product:`, error);
+      //         }
+      //     }
+      // }
+
+
+
+      async function deleteMe(id) {
+        if (confirm("Are you sure you want to delete this product?")) {
+        const response = await fetch(`/admin/products/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+        })
+        if (response.ok) {
+          window.location.href = '/admin/products'
+        } else {
+          console.error('Failed to delete product');
+        }
+      }
+    }
+
+    </script>
+
+  </body>
+
+</html>

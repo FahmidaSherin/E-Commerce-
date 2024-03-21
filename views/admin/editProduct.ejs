@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edit Product Form</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+<style>
+    /* Style for better presentation */
+    body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="text"], input[type="number"], input[type="file"], textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+        .image-upload-container {
+            margin-right: 10px;
+        }
+        .image-upload-container img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        button[type="submit"], button[type="reset"] {
+            padding: 10px 20px;
+            margin-right: 10px;
+        }
+        .image-row {
+            display: flex;
+            justify-content: space-between;
+        }
+        .product-image {
+            width: 150px; /* Adjust the width as needed */
+            height: auto; /* Maintain aspect ratio */
+            border-radius: 8px; /* Add border radius for rounded corners */
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+        }
+        .add-image-button {
+            position: absolute;
+            bottom: -20px; /* Adjust the positioning as needed */
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4CAF50;
+            color: white;
+            padding: 5px 10px; /* Adjust padding to control button size */
+            border: none;
+            border-radius: 3px;
+            font-size: 14px; /* Adjust font size as needed */
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .add-image-button:hover {
+            background-color: #45a049;
+        }
+</style>
+</head>
+<body>
+    <div class="container">
+        <h2>Edit Product</h2>
+        <form action="/admin/editProduct/<%= product._id %>" method="POST" enctype="multipart/form-data">
+
+            <h3>Product Information</h3>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="productName">productName:</label>
+                        <input type="text" id="productName" name="productName" value="<%= product.name %>" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productCategory">Category:</label>
+                        <select name="productCategory" class="form-control "> 
+                            <% categories.forEach(category => { %>
+                                <% if (category._id.toString() === product.category.toString()) { %>
+                                    <option value="<%= category._id %>" selected> <%= category.name %></option>
+                                    <% } else { %>
+                                <option value="<%= category._id %>"><%= category.name %></option>
+                                <% } %>
+                                <% }) %>
+                        </select>
+                 
+                    </div>
+                    <div class="form-group">
+                        <label for="productPrice">Price:</label>
+                        <input type="number" id="productPrice" name="productPrice" value="<%= product.price %>" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productQuantity">Quantity:</label>
+                        <input type="number" id="productQuantity" name="productQuantity" value="<%= product.quantity %>" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productSize">Size:</label>
+                        <input type="text" id="productSize" name="productSize" value="<%= product.size %>" required>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="productDescription">Description:</label>
+                        <textarea id="productDescription" name="productDescription" rows="4" required><%= product.description %></textarea>
+                    </div>
+                    <div class="image-row">
+                        <% product.image.forEach((e, i) => { %>
+                            <div class="image-upload-container" style="position: relative;">
+                                <label for="productImage<%= i %>" class="form-label">
+                                    <img id="productImage<%= i %>" src="/upload/<%= e %>" alt="upload image">
+                                </label>
+                                <label for="productImage<%= i %>" >Image:</label>
+                                <input type="file" onchange="hello(this,'<%=i%>')"  id="productImage<%=i  %>" name="image" accept="image/*" >
+
+                                <input type="text" style="opacity: 0;" value="<%= e %>" name="kk" id="s<%= i %>">
+                                <!-- Close icon -->
+                                <button class="close-icon" onclick="removeImage('<%=i%>')" style="position: absolute; top: 5px; right: 5px; background: transparent; border: none; cursor: pointer;">&#10006;</button>
+                            </div>
+                        <% }) %>
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="form-group text-center">
+                <button type="submit" id="saveChangesBtn" onclick="editProduct()">Save Changes</button>
+                <button type="reset">Cancel</button>
+            </div>
+        </form>
+    </div>
+    <script defer src="https://cdn.crop.guide/loader/l.js?c=DJNDTB"></script>
+    <script>
+        function hello(e,i){
+            const inp=document.getElementById(`s${i}`);
+            
+            inp.value=Date.now()+'-'+e.files[0].name;
+            
+            console.log(inp);
+         
+         
+         
+        }
+    </script>
+    <script>
+       function removeImage(index) {
+    // Remove the image container
+    const imageContainer = document.getElementById(`productImage${index}`).closest('.image-upload-container');
+    imageContainer.remove();
+}
+
+
+// function handleFileInputChange(event) {
+//     const files = event.target.files; // Get the selected files
+//     const selectedImagesContainer = document.getElementById('selectedImagesContainer'); // Get the container for displaying selected images
+    
+//     // Clear the container before adding new images
+//     selectedImagesContainer.innerHTML = '';
+
+//     // Loop through selected files
+//     for (let i = 0; i < files.length; i++) {
+//         const file = files[i];
+        
+//         // Check if the file is an image
+//         if (file.type.startsWith('image/')) {
+//             // Create an image element
+//             const img = document.createElement('img');
+//             img.src = URL.createObjectURL(file); // Set the image source to the selected file
+//             img.classList.add('selected-image'); // Add a class for styling
+            
+//             // Append the image element to the container
+//             selectedImagesContainer.appendChild(img);
+//         }
+//     }
+// }
+
+// // Add event listener to the file input element
+// const fileInput = document.getElementById('productImageMultiple');
+// fileInput.addEventListener('change', handleFileInputChange);
+    </script>
+
+</body>
+</html>
