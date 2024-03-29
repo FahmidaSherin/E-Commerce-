@@ -135,8 +135,10 @@ const getCartCount = async (req,res) => {
     try {
        
         const userId = req.session.user_id
-        const cartCount = await Cart.countDocuments({ userId})
-        res.status(200).json({ cartCount })
+        const cartItems = await Cart.find({ userId }).populate('productId')
+        const cartCount = cartItems.reduce((count,cartItem) => count+cartItem.quantity,0)
+        const uniqueProductCount = cartItems.length
+        res.status(200).json({ cartCount, uniqueProductCount })
     } catch (error) {
         console.error('Error fetching cart count:', error.message);
         res.status(500).json({ message: 'Internal Server Error' });

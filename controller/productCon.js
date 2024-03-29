@@ -39,18 +39,22 @@ const addProducts = async (req, res) => {
     }
 }
 
-
-
-
 const productLists = async (req, res) => {
-    try {createdAt: -1
-        const Products = await Product.find({}).populate("category").sort({  });
-        res.render('products', { Products });
+    try {
+        const pageNumber = parseInt(req.query.page) || 1;
+        const pageSize = 5; 
+        const skip = (pageNumber - 1) * pageSize;
+        const Products = await Product.find({}).populate("category").sort({ createdAt: -1 }).skip(skip).limit(pageSize);
+        const totalProductsCount = await Product.countDocuments()
+        const totalPages = Math.ceil(totalProductsCount/pageSize)
+        res.render('products', { Products,  currentPage: pageNumber , totalPages });
     } catch (error) {
         console.log(error.message);
         res.status(500).send("Internal Server Error");
     }
 }
+
+
 
 
 const editLoad = async (req, res) => {
@@ -204,27 +208,6 @@ const deleteProduct = async (req, res) => {
 }
 
 
-// const sortProducts = async (req, res) => {
-//     try {
-//         let product = await Product.find();
-//         const { sortBy } = req.query;
-//         if (sortBy === 'az') {
-//             product = product.sort((a, b) => a.name.localeCompare(b.name));
-//         } else if (sortBy === 'za') {
-//             product = product.sort((a, b) => b.name.localeCompare(a.name));
-//         } else if (sortBy === 'priceLowToHigh') {
-//             product = product.sort((a, b) => a.price - b.price);
-//         } else if (sortBy === 'priceHighToLow') {
-//             product = product.sort((a, b) => b.price - a.price);
-//         }
-
-//         const newProducts = await fetchNewProducts();
-//         res.render('users/shop', { product , newProducts });
-//     } catch (error) {
-//         console.error('Error fetching products:', error);
-//         res.status(500).json({ error: 'Internal Server Error' });
-//     }
-// };
 
 const sortProducts = async (req, res) => {
     try {

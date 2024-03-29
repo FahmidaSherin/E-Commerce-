@@ -93,6 +93,14 @@ const insertUser = async (req, res) => {
 
 // for send mail
 
+const transporter  = nodemailer.createTransport({
+    service:'gmail',
+    auth: {
+        user : 'shirinmunzz@gmail.com',
+        pass : 'semb vfbr noej meyj'
+    }
+})
+
 const sendVerifyMail=async(name,email,otp)=>{
      try{
           
@@ -171,7 +179,8 @@ console.log(user);
             console.log(user.otp);
             user.is_varified = true;
             await user.save();
-            res.redirect('/home');
+            req.session.user_id=null
+            res.redirect('/login');
         } else {
             console.log("entered eroor in otp matching");
             res.render('users/otp', { error: 'Invalid OTP. Please try again.' });
@@ -374,6 +383,8 @@ const editProfileLoad = async (req, res) => {
         if (!user) {
             return res.status(400).send('User not found'); 
         }
+      
+
         res.render('users/editProfile', { user: user });
     } catch (error) {
         console.log(error.message);
@@ -396,7 +407,7 @@ const updateProfile = async (req, res) => {
             return res.status(404).send('User not found');
         }
         user.name = name;
-        user.email = email;
+        // user.email = email;
         user.mobile = mobile;
 
         await user.save();
@@ -410,7 +421,6 @@ const updateProfile = async (req, res) => {
 
 
 //  Orders load
-
 
 
 

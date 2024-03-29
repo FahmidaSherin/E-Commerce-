@@ -7,53 +7,81 @@ const Address = require('../model/addressModel')
 
 const orderList = async (req, res) => {
     try {
+        console.log('inside the try of orderList');
         const userId = req.session.user_id;
+        console.log('userId----',userId);
         const address = await Address.findOne({ userId });
+        console.log('address---',address);
         const order = await Order.find({ userId }).populate('orderedItem.productId');
+        console.log('order',order);
         const users = await User.findOne({ _id: userId });
-
+        console.log('users',users);
         res.render('users/orders', { order: order, address: address, users: users });
     } catch (error) {
+        console.log('inside the catch of orderlist');
         console.error('Error fetching orders:', error);
         res.status(500).send('Internal Server Error');
     }
 };
 
 
-const cancelOrder = async (req, res) => {
+
+
+
+
+
+
+
+
+const viewOrder = async (req,res) => {
     try {
-        const { orderId } = req.params;
-        const { productId } = req.body; // Assuming productId is sent in the request body
-        console.log('req.params',req.params);
-        console.log(' req.body', req.body);
-        const order = await Order.findById(orderId);
-console.log('order',order);
-        if (!order) {
-            return res.status(404).json({ message: 'Order not found' });
-        }
-
-        // Find the index of the product in the orderedItem array
-        const productIndex = order.orderedItem.findIndex(item => item.productId.toString() === productId);
-console.log('productIndex',productIndex);
-        if (productIndex === -1) {
-            return res.status(404).json({ message: 'Product not found in order' });
-        }
-
-        // Remove the product from the orderedItem array
-        order.orderedItem.splice(productIndex, 1);
-
-        // Save the updated order
-        await order.save();
-
-        res.status(200).json({ message: 'Product cancelled successfully' });
+        const userId = req.session.user_id
+        console.log('userId>>>>>>>>>>>>>>>>>>>',userId);
+        const user = await User.findOne ({ _id: userId })
+        console.log('user>>>>>>>>>>>>>>>>>>>>>>',user);
+        const orderId = req.query.orderId.replace(/\s+/g, '');
+console.log('orderId:::::::::::::::::::',orderId);
+        const orderDetails = await Order.findOne({ _id: orderId}).populate('userId')
+        .populate({path: 'orderedItem.productId', model: 'Product'})
+        .populate ('deliveryAddress')
+console.log('orderDetails;;;;;;;;;;;;;;;;;;;',orderDetails);
+        const products = orderDetails.orderedItem
+console.log('products;;;;;;;;;;;;;',products);
+        res.render ('users/singleOrder', {orderDetails: orderDetails , user:userId})
     } catch (error) {
-        console.error('Error cancelling product:', error);
-        res.status(500).json({ message: 'Internal Server Error' });
+       console.log(error.message); 
+    }
+}
+
+
+const cancelOrder = async (req, res) => {
+
+    const orderId = req.params.orderId;
+    console.log('orderId>>>>>>>>>>>>',orderId);
+    const newStatus = req.body.status;
+    console.log('newStatus>>>>>>>>>>>>>>>>>>',newStatus);
+    try {
+        // Find the order by ID and update its status
+        console.log('inside try of cancelOrder');
+        const updatedOrder = await Order.findByIdAndUpdate(orderId, { orderStatus: newStatus }, { new: true });
+        console.log('updatedOrder:::::::::::',updatedOrder);
+        if (!updatedOrder) {
+            console.log('Order not found     ?????????????????????????????');
+            return res.status(404).json({ error: 'Order not found' });
+        }
+
+        // Respond with the updated order
+        res.status(200).json(updatedOrder);
+    } catch (error) {
+        console.log('inside catch of cancelOrder');
+        console.error('Error updating order status:', error);
+        res.status(500).json({ error: 'Failed to update order status' });
     }
 };
 
 
 module.exports = {
     orderList,
-    cancelOrder
+    cancelOrder,
+    viewOrder
 }

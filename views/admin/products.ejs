@@ -141,7 +141,7 @@
             </li>
 
             <li class="nav-item">
-              <a class="nav-link" href="/admin/orders">
+              <a class="nav-link" href="/admin/order">
                 <i class="icon-help menu-icon"></i>
                 <span class="menu-title">Orders</span>
               </a>
@@ -243,6 +243,19 @@
                     <% } %>
                   </tbody>
                 </table>
+                <div class="pagination">
+              <% if (currentPage > 1) { %>
+                  <button class="btn btn-primary" onclick="goToPage(<%= currentPage - 1 %>)">Previous</button>
+              <% } %>
+          
+              <% for (let i = 1; i <= totalPages; i++) { %>
+                  <button class="btn btn-primary <%= currentPage === i ? 'active' : '' %>" onclick="goToPage(<%= i %>)"><%= i %></button>
+              <% } %>
+          
+              <% if (currentPage < totalPages) { %>
+                  <button class="btn btn-primary" onclick="goToPage(<%= currentPage + 1 %>)">Next</button>
+              <% } %>
+          </div>
               </div>
             </div>
           </div>
@@ -363,6 +376,12 @@ function toggleProductStatus(productId, button) {
     }
 
     </script>
+      <script>
+        function goToPage(pageNumber) {
+        // Redirect to the categories page with the specified page number as a query parameter
+        window.location.href = `/admin/products?page=${pageNumber}`;
+    }
+      </script>
 
   </body>
 

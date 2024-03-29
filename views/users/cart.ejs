@@ -1,5 +1,5 @@
 <%- include('../layouts/headerProd.ejs') %>
-        <main class="main">
+    <main class="main">
         	<div class="page-header text-center" style="background-image: url('assets/images/page-header-bg.jpg')">
         		<div class="container">
         			<h1 class="page-title">Shopping Cart<span>Shop</span></h1>
@@ -14,7 +14,7 @@
                     </ol>
                 </div>
             </nav>
-
+        <div class="content">
             <div class="page-content">
             	<div class="cart">
 	                <div class="container">
@@ -150,8 +150,10 @@
 	                	</div><!-- End .row -->
 	                </div>
                 </div><!-- End .cart -->
-            </div><!-- End .page-content -->
-        </main><!-- End .main -->
+            </div>
+                 <!-- Content goes here -->
+        </div><!-- End .page-content -->
+    </main><!-- End .main -->
 
         <%- include('../layouts/footerProd.ejs') %>
 
@@ -422,7 +424,8 @@
             const subtotalElement = document.getElementById('subtotal');
             if (totalPriceElement && subtotalElement) {
                 const totalPrice = parseFloat(totalPriceElement.textContent.replace('₹', ''));
-                const updatedTotalPrice = totalPrice - (parseFloat(productTotalElement.textContent.replace('₹', '')) * (newQuantity - 1)) + productTotal;
+                const productTotalBeforeUpdate = parseFloat(productTotalElement.dataset.originalValue.replace('₹', ''));
+                const updatedTotalPrice = totalPrice - productTotalBeforeUpdate + productTotal;
                 totalPriceElement.textContent = '₹' + updatedTotalPrice;
                 subtotalElement.textContent = '₹' + updatedTotalPrice;
             }

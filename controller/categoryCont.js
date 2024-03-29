@@ -10,8 +10,11 @@ const Category = require('../model/categoryModel')
 
 const categoryList = async (req, res) => {
     try {
-        const categories = await Category.find().sort({ createdAt: -1})
-        res.render('categories', { categories })
+        const pageNumber = parseInt(req.query.page) || 1;
+        const pageSize = 10; 
+        const skip = (pageNumber - 1) * pageSize;
+        const categories = await Category.find({}).sort({ createdAt: -1}).skip(skip).limit(pageSize)
+        res.render('categories', { categories, currentPage: pageNumber })
     } catch (error) {
         console.log(error.message);
     }

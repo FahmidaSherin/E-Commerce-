@@ -562,10 +562,15 @@ console.log('deliveryAddress',deliveryAddress);
                 body: JSON.stringify(requestBody)
             });
 
+            console.log("response",response);
+           
             // Handle response based on success or failure
             if (response.ok) {
+
+               let success= await response.json()
+               console.log('success',success);
                 // Redirect to the thank you page
-                window.location.href = '/thankyou';
+                window.location.href = `/thankyou?orderId=${success.order}`;
             } else {
                 // Handle error response
                 console.error('Error placing order:', response.statusText);

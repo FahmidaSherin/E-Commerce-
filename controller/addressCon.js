@@ -248,8 +248,12 @@ const editCheckout = async (req, res) => {
 };
 
 const loadThenkyou = async (req,res) => {
+    const orderId = req.query.orderId;
     try {
-        res.render('users/thankyou')
+       console.log(orderId);
+        const order= await Order.findOne({_id:orderId})  
+        console.log('orderhuhuhuhuhu',order);
+        res.render('users/thankyou',{ order})
     } catch (error) {
         console.log(error.message);
     }
@@ -282,6 +286,11 @@ const placeOrder = async (req, res) => {
             }));
     
             console.log('orderedItems',orderedItems);
+
+            for(let item of orderedItems){
+                const {productId , quantity } = item
+                const products = await Product.updateOne({_id: productId},{ $inc: {quantity: -quantity}})
+            }
            
             const orderAmount = cart.reduce((acc, item) => {
                 console.log('Price:', item.price);
@@ -298,26 +307,19 @@ const placeOrder = async (req, res) => {
                 orderStatus: 'pending',
                 deliveryDate: null, 
                 shippingDate: null 
-            });
-    
+            });    
             
             await order.save();
+            console.log('order',order);
     
             await Cart.deleteMany({userId:userId})
-            
-            res.redirect(`/thankyou?orderId=${order._id}`);
+            res.json({success:true,order:order._id})
+            // res.redirect(`/thankyou?orderId=${order._id}`);
         } catch (error) {
             console.error('Error placing order:', error);
             res.status(500).json({ success: false, message: 'Internal Server Error' });
         }
     };
-
-
-
-
-
-
-
 
 
 
@@ -329,7 +331,6 @@ module.exports = {
     editAddressLoad,
     editAddress,
     deleteAddress,
-
 
     loadCheckout,
     checkoutAddress,

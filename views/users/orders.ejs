@@ -56,34 +56,54 @@
                                             <tr>
                                                 <th scope="col" class="text-center">Product Image</th>
                                                 <th scope="col" class="text-center">Product Name</th>
-                                                <th scope="col" class="text-center">Quantity</th>
-                                                <th scope="col" class="text-center">Price</th>
+                                                <!-- <th scope="col" class="text-center">Quantity</th>
+                                                <th scope="col" class="text-center">Price</th> -->
                                                 <th scope="col" class="text-center">Status</th>
                                                 <th scope="col" class="text-center">Details</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <!-- Loop through orders and items -->
-                                            <% order.forEach(order => { %>
-                                                <% order.orderedItem.forEach(item => { %>
+                                            <% order.forEach((order, orderIndex) => { %>
+                                                <% order.orderedItem.forEach((item, itemIndex) => { %>
                                                     <tr>
-                                                        <td class="align-middle text-center"><img src="/upload/<%= item.productId.image[0] %>" alt="<%= item.productId.name %>" class="img-thumbnail" style="max-width: 100px;"></td>
-                                                        <td class="align-middle text-center"><%= item.productId.name %></td>
-                                                        <td class="align-middle text-center"><%= item.quantity %></td>
-                                                        <td class="align-middle text-center">₹<%= item.price.toFixed(2) %></td>
-                                                        <td class="align-middle text-center" id="orderStatus_<%= order._id %>"><%= order.status %></td>
-                                                        <td class="align-middle text-center"><a href="#" class="btn btn-sm btn-info">View Details</a></td>
-                                                       
+                                                        <!-- Display product information for the first item of each order -->
+                                                        <% if (itemIndex === 0) { %>
+                                                            <td class="align-middle text-center">
+                                                                <img src="/upload/<%= item.productId.image[0] %>" alt="<%= item.productId.name %>" class="img-thumbnail" style="max-width: 100px;">
+                                                            </td>
+                                                            <td class="align-middle text-center"><%= item.productId.name %></td>
+                                                            
+                                                            <td class="align-middle text-center">
+                                                                <% if (order.orderStatus === 'pending') { %>
+                                                                    <span class="badge rounded-pill alert-warning" style="font-size: 16px; padding: 8px 13px;">Pending</span>   
+                                                                <% } else if (order.orderStatus === 'processing') { %>   
+                                                                    <span class="badge rounded-pill alert-primary" style="font-size: 16px; padding: 8px 12px;">Processing</span>
+                                                                <% } else if (order.orderStatus === 'shipped') { %>   
+                                                                    <span class="badge rounded-pill alert-info" style="font-size: 16px; padding: 8px 12px;">Shipped</span>    
+                                                                <% } else if (order.orderStatus === 'delivered') { %>    
+                                                                    <span class="badge rounded-pill alert-success" style="font-size: 16px; padding: 8px 12px;">Delivered</span>
+                                                                <% } else if (order.orderStatus === 'cancelled') { %>  
+                                                                    <span class="badge rounded-pill alert-danger"style="font-size: 16px; padding: 8px 11px;">Cancelled</span>
+                                                                <% } %>     
+                                                            </td>
+                                                            <!-- Display the Details button for the first item of each order -->
+                                                            <% if (itemIndex === 0) { %>
+                                                                <td class="align-middle text-center">
+                                                                    <a href="javascript:void(0)" class="btn btn-success btn-sm view-btn font-sm text-white" data-id="<%= order._id %>">DETAILS</a>
+                                                                </td>
+                                                            <% } %>
+                                                        <% } %>
                                                     </tr>
-                                                    <td class="align-middle text-center">     <% if (order.status !== 'Cancelled') { %>
-                                                        <button class="btn btn-sm btn-primary cancel-order-btn" data-order-id="<%= order._id %>">Cancel Order</button>
-                                                    <% } else { %>
-                                                        <span class="badge badge-danger">Cancelled</span>
-                                                    <% } %></td>
                                                 <% }); %>
                                             <% }); %>
                                         </tbody>
                                     </table>
+                                    
+                                    
+                                    <!-- Single Details button for each order -->
+                                   
+                                    
                                                                         
                                     <a href="category.html" class="btn btn-outline-primary-2"><span>GO SHOP</span><i class="icon-long-arrow-right"></i></a>
                                 </div>
@@ -387,40 +407,19 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const cancelOrderButtons = document.querySelectorAll('.cancel-order-btn');
-            cancelOrderButtons.forEach(button => {
-                button.addEventListener('click', async (event) => {
-                    event.preventDefault(); // Prevent default button behavior
-    
-                    const orderId = button.dataset.orderId;
-                    // Show confirmation dialog
-                    const confirmCancellation = window.confirm("Are you sure you want to cancel this order?");
-                    if (confirmCancellation) {
-                        try {
-                            const response = await axios.delete(`/cancelOrder/${orderId}` , {
-                                data: { productId: productIdToRemove }
-                            });                           
-                            if (response.status === 200) {
-                                console.log('Order cancelled successfully');
-                                // Update UI to show the order is canceled
-                                const orderStatusElement = button.closest('tr').querySelector('.align-middle.text-center');
-                                if (orderStatusElement) {
-                                    orderStatusElement.textContent = 'Cancelled';
-                                }
-                            } else {
-                                console.error('Failed to cancel order');
-                            }
-                        } catch (error) {
-                            console.error('Error cancelling order:', error.message);
-                        }
-                    } else {
-                        console.log('Cancellation cancelled by user');
-                    }
-                });
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('click', function(event) {
+                if (event.target.classList.contains('view-btn')) {
+                    // Get the order ID from the data-id attribute of the clicked element
+                    var orderId = event.target.getAttribute('data-id');
+                    console.log("orderId", orderId);
+                    // Redirect to the single order page with the order ID as a query parameter
+                    window.location.href = '/singleorder?orderId=' + orderId;
+                }
             });
         });
     </script>
+   
     
     
 

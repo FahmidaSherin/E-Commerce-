@@ -12,7 +12,7 @@
             background-color: #f4f4f4;
         }
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 50px auto;
             padding: 20px;
             background-color: #fff;
@@ -33,6 +33,16 @@
         }
         .image-upload-container {
             margin-right: 10px;
+            position: relative;
+            display: inline-block;
+        }
+        .image-upload-container .close-icon {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: transparent;
+            border: none;
+            cursor: pointer;
         }
         .image-upload-container img {
             width: 100px;
@@ -73,6 +83,12 @@
 
         .add-image-button:hover {
             background-color: #45a049;
+        }
+
+        .product-image-preview {
+            max-width: 200px;
+            max-height: 200px;
+            margin-top: 10px;
         }
 </style>
 </head>
@@ -119,6 +135,7 @@
                         <label for="productDescription">Description:</label>
                         <textarea id="productDescription" name="productDescription" rows="4" required><%= product.description %></textarea>
                     </div>
+                   
                     <div class="image-row">
                         <% product.image.forEach((e, i) => { %>
                             <div class="image-upload-container" style="position: relative;">
@@ -130,11 +147,10 @@
 
                                 <input type="text" style="opacity: 0;" value="<%= e %>" name="kk" id="s<%= i %>">
                                 <!-- Close icon -->
-                                <button class="close-icon" onclick="removeImage('<%=i%>')" style="position: absolute; top: 5px; right: 5px; background: transparent; border: none; cursor: pointer;">&#10006;</button>
+                                <button class="close-icon" onclick="removeImage('<%=i%>')" style="position: absolute; top: 0; right:0; background: transparent; border: none; cursor: pointer;">&#10006;</button>
                             </div>
                         <% }) %>
                     </div>
-                    
                 </div>
             </div>
             <div class="form-group text-center">
@@ -151,47 +167,14 @@
             inp.value=Date.now()+'-'+e.files[0].name;
             
             console.log(inp);
-         
-         
-         
         }
     </script>
     <script>
-       function removeImage(index) {
-    // Remove the image container
-    const imageContainer = document.getElementById(`productImage${index}`).closest('.image-upload-container');
-    imageContainer.remove();
-}
-
-
-// function handleFileInputChange(event) {
-//     const files = event.target.files; // Get the selected files
-//     const selectedImagesContainer = document.getElementById('selectedImagesContainer'); // Get the container for displaying selected images
-    
-//     // Clear the container before adding new images
-//     selectedImagesContainer.innerHTML = '';
-
-//     // Loop through selected files
-//     for (let i = 0; i < files.length; i++) {
-//         const file = files[i];
-        
-//         // Check if the file is an image
-//         if (file.type.startsWith('image/')) {
-//             // Create an image element
-//             const img = document.createElement('img');
-//             img.src = URL.createObjectURL(file); // Set the image source to the selected file
-//             img.classList.add('selected-image'); // Add a class for styling
-            
-//             // Append the image element to the container
-//             selectedImagesContainer.appendChild(img);
-//         }
-//     }
-// }
-
-// // Add event listener to the file input element
-// const fileInput = document.getElementById('productImageMultiple');
-// fileInput.addEventListener('change', handleFileInputChange);
+        function removeImage(index) {
+        // Remove the image container
+        const imageContainer = document.getElementById(`productImage${index}`).closest('.image-upload-container');
+        imageContainer.remove();
+        }
     </script>
-
-</body>
+    </body>
 </html>

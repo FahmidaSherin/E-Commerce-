@@ -43,8 +43,8 @@ user_route.get('/otp',userCon.otpLoad)
 user_route.post('/verify-otp', userCon.verifyOTP);
 user_route.post('/resend-otp',userCon.resendOTP)
 
-user_route.get('/shop',auth.isLogin, auth.isBlocked, userCon.shopLoad)
-user_route.get('/singleProduct/:productId',auth.isLogin, auth.isBlocked, userCon.singleProductLoad)
+user_route.get('/shop', auth.isBlocked, userCon.shopLoad)
+user_route.get('/singleProduct/:productId', auth.isBlocked, userCon.singleProductLoad)
 
 user_route.get('/profile',userCon.profileLoad)
 user_route.get('/editProfile', userCon.editProfileLoad)
@@ -75,7 +75,8 @@ user_route.post('/editCheckout',addressCon.editCheckout)
 user_route.post('/placeOrder', addressCon.placeOrder);
 user_route.get('/thankyou',addressCon.loadThenkyou)
 user_route.get('/orders',  auth.isLogin, orderCon.orderList)
-user_route.delete('/cancelOrder/:orderId', orderCon.cancelOrder)
+user_route.put('/cancelOrder/:orderId', orderCon.cancelOrder)
+user_route.get('/singleOrder', auth.isLogin, orderCon.viewOrder)
 
 
 module.exports = user_route;

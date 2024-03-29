@@ -1,0 +1,201 @@
+<%- include('../layouts/header.ejs') %>
+
+
+
+        <!-- Main content -->
+        <div class="container-fluid">
+        <div class="row">
+            <aside class="col-md-4 col-lg-3">
+                <ul class="nav nav-dashboard flex-column mb-3 mb-md-0" role="tablist">
+                    <!-- Navigation links -->
+                    <!-- Profile link -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/profile">Profile</a>
+                    </li>
+                    <!-- Orders link (active) -->
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/orders">Orders</a>
+                    </li>
+                    <!-- Other links -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="#tab-downloads">Downloads</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/address">Addresses</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/accountDetails">Account Details</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Sign Out</a>
+                    </li>
+                </ul>
+            </aside>
+            
+            <div class="col-md-8 col-lg-9">
+                <!-- Details -->
+                <div class="card mb-4">
+                    <div class="card-body"><div>
+                        <h2 class="h5 mb-0"><a href="#" class="text-muted"></a> Order #<%= orderDetails._id %>
+                        </h2>
+                    </div>
+                        <div class="mb-3 d-flex justify-content-between">
+                            
+                            <div>
+                                <span class="me-3">Date: <%= orderDetails.createdAt.toLocaleDateString() %></span><br>
+                                <span class="me-3">#<%= orderDetails._id %></span><br>
+                                <span class="me-3">Payment Method: <%= orderDetails.paymentMethod %></span><br>
+                                <span class="badge rounded-pill <%= orderDetails.orderStatus === 'delivered' ? 'bg-success' : 'bg-info' %>" style="font-size: 16px; padding: 8px 12px;"><%= orderDetails.orderStatus %></span>
+                            </div>
+                            <div class="d-flex">
+                                <!-- Additional buttons or dropdowns can be added here -->
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                        <table class="table table-borderless">
+                            <thead>
+                                <tr>
+                                    <th>Product Image</th>
+                                    <th>Product Name</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% orderDetails.orderedItem.forEach(function(item) { %>
+                                    <tr>
+                                        <td>
+                                            <img src="/upload/<%= item.productId.image[0] %>" alt="Product Image" class="img-thumbnail" style="max-width: 100px;">
+                                        </td>
+                                        <td><%= item.productId.name %></td>
+                                        <td><%= item.quantity %></td>
+                                        <td>₹<%= item.price %></td>
+                                    </tr>
+                                <% }); %>
+                            </tbody>
+                            <tfoot>
+                                <!-- Add subtotal, shipping, discount, and total rows here -->
+                            </tfoot>
+                        </table>
+                    </div>
+                    <div class="text-end">
+                        <% if (orderDetails.orderStatus !== 'delivered') { %>
+                            <button type="button" id="cancel-btn" class="btn btn-danger"data-id="<%= orderDetails._id %>" >Cancel Order</button>
+                        <% } else { %>
+                            <button type="button" id="return-btn" class="btn btn-primary" data-id="<%= orderDetails._id %>">Return Order</button>
+                        <% } %>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-4 d-flex flex-column">
+    <!-- Payment -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h3 class="card-title">Payment Method</h3>
+            <div class="d-flex justify-content-between">
+                <p class="mb-1"><strong>Method:</strong></p>
+                <p class="mb-1"><%= orderDetails.paymentMethod %></p>
+            </div>
+            <div class="d-flex justify-content-between">
+                <p class="mb-1"><strong>Total:</strong></p>
+                <p class="mb-1">₹<%= orderDetails.orderAmount %></p>
+            </div>
+            <!-- Additional payment details can be added here -->
+        </div>
+    </div>
+
+    <!-- Shipping Information -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h3 class="card-title">Shipping Information</h3>
+            <div class="d-flex justify-content-between">
+                <p class="mb-1"><strong>Name:</strong></p>
+                <p class="mb-1"><%= orderDetails.deliveryAddress.name %></p>
+            </div>
+            <div class="d-flex justify-content-between">
+                <p class="mb-1"><strong>Phone:</strong></p>
+                <p class="mb-1"><%= orderDetails.deliveryAddress.mobile %></p>
+            </div>
+            <div class="d-flex justify-content-between">
+                <p class="mb-1"><strong>Tracking:</strong></p>
+                <p class="mb-1">
+                    <a href="<%= orderDetails.trackingLink %>" class="text-decoration-underline" target="_blank"><%= orderDetails.trackingNumber %></a>
+                    <i class="bi bi-box-arrow-up-right"></i>
+                </p>
+            </div>
+            <hr>
+            <h3 class="card-title">Address</h3>
+            <p class="mb-1"><strong>City:</strong> <%= orderDetails.deliveryAddress.city %>, <%= orderDetails.deliveryAddress.locality %></p>
+            <p class="mb-1"><strong>Address:</strong> <%= orderDetails.deliveryAddress.streetAddress %></p>
+            <p class="mb-1"><strong>State:</strong> <%= orderDetails.deliveryAddress.state %></p>
+            <p class="mb-1"><strong>PINCODE:</strong> <%= orderDetails.deliveryAddress.postalCode %></p>
+            <input type="hidden" name="" id="orderId" value="<%= orderDetails._id %>">
+        </div>
+    </div>
+</div>
+
+</div>
+<!-- Return reason modal -->
+<div class="modal fade" id="returnReasonModal" tabindex="-1" aria-labelledby="returnReasonModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="returnReasonModalLabel">Return Reason</h5>
+                <p id="errorMessage"></p>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="returnReasonForm">
+                    <div class="mb-3">
+                        <label for="returnReason" class="form-label">Why are you returning this item?</label>
+                        <select class="form-select" id="returnReason">
+                            <option value="" selected>Choose...</option>
+                            <option value="damaged">Item was damaged</option>
+                            <option value="incorrect">Incorrect item was sent</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="mb-3 d-none" id="otherReasonContainer">
+                        <label for="otherReason" class="form-label">Please specify:</label>
+                        <textarea class="form-control" id="otherReason" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="confirmReturn" data-bs-dismiss="modal">Confirm Return</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    
+    document.getElementById('cancel-btn').addEventListener('click', function() {
+        var orderId = this.getAttribute('data-id');
+        // Send an HTTP request to update order status
+        if (confirm('Are you sure you want to cancel this order?')) {
+            axios.put('/cancelOrder/' + orderId, { status: 'cancelled' })
+            .then(response => {
+                if (response.status === 200) {
+                    // Reload the page or perform any other action upon successful update
+                    location.reload();
+                } else {
+                    // Handle error case
+                    console.error('Failed to update order status');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+    });
+
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>

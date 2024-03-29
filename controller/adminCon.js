@@ -3,6 +3,7 @@ const bcrypt=require('bcrypt')
 const config=require('../config/config')
 const Category = require('../model/categoryModel')
 const Product = require ('../model/productModel')
+const Order = require('../model/orderModel')
 
 
 
@@ -115,25 +116,29 @@ const updateUserStatus = async (req,res) => {
 
 // product Details
 
-const productDetails=async(req,res)=>{
-    try {
-        const Products = await Product.find()
-        res.render('products',{Products:Products})
-        console.log(Products);
+// const productDetails=async(req,res)=>{
+//     try {
+//         const Products = await Product.find()
+//         res.render('products',{Products:Products})
+//         console.log(Products);
         
-    } catch (error) {
-        console.log(error.message);
-    }
-}
+//     } catch (error) {
+//         console.log(error.message);
+//     }
+// }
 
 // Category Details
 
 const categoryDetails=async(req,res)=>{
     try {
 
-     
-        const categorys = await Category.find()
-        res.render('categories',{categorys:categorys})
+        const pageNumber = parseInt(req.query.page) || 1;
+        const pageSize = 10; 
+        const skip = (pageNumber - 1) * pageSize;
+        const categorys = await Category.find({}).sort({ createdAt: -1}).skip(skip).limit(pageSize)
+        const totalCategoriesCount = await Category.countDocuments();
+        const totalPages = Math.ceil(totalCategoriesCount / pageSize);
+        res.render('categories',{categorys:categorys , currentPage: pageNumber , totalPages})
         // console.log(categorys);
     } catch (error) {
         console.log(error.message);
@@ -155,6 +160,73 @@ const updatedCategory = async (req,res) => {
     }
 }
 
+
+const orderDetails = async (req,res) => {
+    try {
+        const orders = await Order.find({}).populate('userId')
+        .populate('deliveryAddress')
+        .populate({ path : 'orderedItem.productId', model:'Product'})
+        .sort({ _id: -1 })
+        console.log('orders:',orders);
+
+        const formattedOrders = orders.map(order => {
+            const date = new Date (order.createdAt)
+            const formattedDate = date.getFullYear() + '-' + String(date.getMonth() +1).padStart(2,'0')+ '-' + String(date.getDate()).padStart(2,'0')
+            return {
+                ...order.toObject(),
+                formattedCreatedAt : formattedDate
+            }
+        })
+        res.render('order', { orderDetails: formattedOrders })
+    } catch (error) {
+       console.log(error.message); 
+    }
+}
+
+const singleView = async (req,res) => {
+    try {
+        const orderId = req.query.orderId.replace(/\s+/g, '');
+console.log(' admin orderId:::::::::::::::::::',orderId);
+        const orderDetails = await Order.findOne({ _id: orderId}).populate('userId')
+        .populate({path: 'orderedItem.productId', model: 'Product'})
+        .populate ('deliveryAddress')
+console.log(' admin orderDetails;;;;;;;;;;;;;;;;;;;',orderDetails);
+        const products = orderDetails.orderedItem
+console.log('admin products;;;;;;;;;;;;;',products);
+        res.render ('singleView', {orderDetails: orderDetails })
+    } catch (error) {
+       console.log(error.message); 
+    }
+}
+
+
+const updateStatus = async (req, res) => {
+    try {
+      console.log('going to change the order status');
+      const { status, orderId } = req.body; // Removed productId
+  
+  console.log('status',status);
+  console.log('orderId',orderId);
+  
+      const orderStatus = await Order.updateOne(
+        { 
+          _id: orderId,
+        },
+        { 
+          $set: { 'orderStatus': status } // Update the order status directly
+        }
+      );
+  console.log('orderStatus',orderStatus);
+     
+      console.log('successfully updated the order status');
+      res.status(200).json({ success: true });
+    } catch (error) {
+      console.log('Error in updating order status:', error);
+      res.status(500).json({ success: false });
+    }
+  };
+
+
 //Logout
 
 const logout = async (req, res) => {
@@ -167,14 +239,19 @@ const logout = async (req, res) => {
     }
 }
 
+
+
 module.exports={
     loadLogin,
     loadDashboard,
     listUsers,
     updateUserStatus,
-    productDetails,
+    // productDetails,
     categoryDetails,
     updatedCategory,
+    orderDetails,
+    singleView,
+    updateStatus,
     logout,
     adminVerify
 }

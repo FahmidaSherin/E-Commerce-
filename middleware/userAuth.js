@@ -23,8 +23,6 @@ console.log('helosf isLogout')
             res.redirect('/userhome')
             console.log('in is_logout')
 
-        // }else if (req.session.admin_id){
-        //     res.redirect('/admin/home')
     } else {
         console.log('else');
         next()
